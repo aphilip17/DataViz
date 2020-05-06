@@ -1,6 +1,6 @@
 <script>
 import { latLng } from 'leaflet';
-import { LMap, LTileLayer, LFeatureGroup, LCircle } from 'vue2-leaflet';
+import { LMap, LTileLayer, LFeatureGroup, LCircle, LPopup } from 'vue2-leaflet';
 import Centroid from '@turf/centroid';
 
 export default {
@@ -10,12 +10,13 @@ export default {
         LTileLayer,
         LFeatureGroup,
         LCircle,
+        LPopup,
     },
     data() {
         return {
             zoom: 3,
             center: latLng(47.41322, -1.219482),
-            url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+            url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
             subdomains: 'abcd',
             maxZoom: 19,
