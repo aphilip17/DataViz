@@ -78,8 +78,13 @@ export default {
                     :key="index"
                     :lat-lng="[circle.geometry.coordinates[1], circle.geometry.coordinates[0]]"
                     :radius="4500"
-                    color="red"
+                    :weight="0"
+                    fillColor="#ff033e"
+                    :fillOpacity="0.8"
+
                 >
+                    <l-popup> {{circle.properties.nom + ' ' + circle.properties.code}}
+                    </l-popup>
                 </l-circle>
 
             </l-feature-group>
