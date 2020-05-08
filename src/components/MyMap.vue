@@ -21,7 +21,8 @@ export default {
             subdomains: 'abcd',
             maxZoom: 19,
             depts: {},
-            circles: []
+            circles: [],
+            formatDataCodiv: {}
         }
     },
 
@@ -44,11 +45,52 @@ export default {
             } catch (error) {
                 console.log(error);
             }
+        },
 
+        async getHpCodivData() {
+            try {
+                const response = await fetch('http://localhost:8080/hpCovid.json');
+                const data = await response.json();
+
+                this.formatDataCodiv = data.reduce((accu, elem) => {
+
+                    if (elem.sexe !== 0) {
+                        return accu;
+                    }
+
+                    if (accu[elem.dep]) {
+                        accu[elem.dep][elem.jour] = {
+                                hosp: elem.hosp,
+                                dc: elem.dc,
+                                rad: elem.rad,
+                                rea: elem.rea
+                        }
+
+                    } else {
+
+                        accu[elem.dep] = {
+                            [elem.jour] : {
+                                hosp: elem.hosp,
+                                dc: elem.dc,
+                                rad: elem.rad,
+                                rea: elem.rea
+                            }
+                        }
+                    }
+
+                    return accu;
+                }, {})
+
+                console.log(this.formatDataCodiv);
+
+            } catch (error) {
+                console.log(error);
+            }
         },
 
         async displayCircles() {
             await this.getDeptsGeojson();
+            await this.getHpCodivData();
             this.circles = this.depts.features.map((dpt) => {
                 return Centroid(dpt, dpt.properties);
             });
