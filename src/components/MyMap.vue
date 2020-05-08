@@ -96,6 +96,20 @@ export default {
             });
 
             console.log(this.circles);
+        },
+
+        getRadius(dep) {
+            return Math.sqrt(this.formatDataCodiv[dep]['2020-05-06'].dc) * 1000;
+        },
+
+        getContentTooltip(circle) {
+            const dep = circle.properties.code;
+
+            return `<span style='color:#ff033e; font-weight: bold'> ${circle.properties.nom} ${dep} </span>
+                    <div>
+                        <span> Décès: </span>
+                        <span> ${this.formatDataCodiv[dep]['2020-05-06'].dc} </span>
+                    </div>`
         }
     }
 }
@@ -119,13 +133,13 @@ export default {
                     v-for="(circle, index) in circles"
                     :key="index"
                     :lat-lng="[circle.geometry.coordinates[1], circle.geometry.coordinates[0]]"
-                    :radius="4500"
+                    :radius="getRadius(circle.properties.code)"
                     :weight="0"
                     fillColor="#ff033e"
                     :fillOpacity="0.8"
 
                 >
-                    <l-popup> {{circle.properties.nom + ' ' + circle.properties.code}}
+                    <l-popup :content="getContentTooltip(circle)">
                     </l-popup>
                 </l-circle>
 
