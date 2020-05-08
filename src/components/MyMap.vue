@@ -116,7 +116,7 @@ export default {
 </script>
 
 <template>
-    <div style="height: 500px; width: 100%">
+    <div class="my-map">
         <l-map
             :zoom="zoom"
             :center="center"
@@ -149,5 +149,9 @@ export default {
     </div>
 </template>
 
-<style>
+<style scoped>
+    .my-map {
+        height: 100%;
+        width: 100%
+    }
 </style>
