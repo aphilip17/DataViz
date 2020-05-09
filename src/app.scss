@@ -1,0 +1,17 @@
+// The order matters
+// import Materialize colors
+@import 'materialize-css/sass/components/_color-variables.scss';
+@import 'materialize-css/sass/components/_color-classes.scss';
+
+
+// Override Materialize variables
+@import 'materialize-css/sass/components/_variables.scss';
+
+$button-color: FFFFF;
+$button-height: 40px;
+$button-large-height: $button-height * 10;
+
+// Materialize Styles
+@import 'materialize-css/sass/materialize.scss';
+
+

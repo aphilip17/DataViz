@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import 'leaflet/dist/leaflet.css'
+import './app.scss';
 
 Vue.config.productionTip = false
 
