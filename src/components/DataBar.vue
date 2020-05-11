@@ -23,7 +23,7 @@ export default {
 </script>
 
 <template>
-  <div class="data-bar">
+  <div class="data-bar card-panel hoverable">
     <a
       v-for="(opt, index) in options"
       :key="index"

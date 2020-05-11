@@ -116,7 +116,7 @@ export default {
 </script>
 
 <template>
-    <div class="my-map">
+    <div class="my-map card-panel hoverable">
         <l-map
             :zoom="zoom"
             :center="center"
