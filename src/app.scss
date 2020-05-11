@@ -7,9 +7,7 @@
 // Override Materialize variables
 @import 'materialize-css/sass/components/_variables.scss';
 
-$button-color: FFFFF;
-$button-height: 40px;
-$button-large-height: $button-height * 10;
+$button-large-height: $button-height * 3;
 
 // Materialize Styles
 @import 'materialize-css/sass/materialize.scss';
