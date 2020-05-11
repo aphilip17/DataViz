@@ -6,19 +6,30 @@ export default {
     return {
       options: [{
         disabled: true,
-        name: 'Hospitalized'
+        name: 'Hospitalized',
+        id: 'hosp'
       }, {
         disabled: true,
-        name: 'Critical care'
+        name: 'Critical care',
+        id: 'rea'
       }, {
         disabled: true,
-        name: 'Healed'
+        name: 'Healed',
+        id: 'rad',
       }, {
         disabled: false,
-        name: 'Deaths'
+        name: 'Deaths',
+        id: 'dc'
       }]
     }
   },
+
+  methods: {
+    activeData(opt) {
+      opt.disabled = !opt.disabled;
+      this.$root.$emit('active-data', opt.id, !opt.disabled);
+    }
+  }
 }
 </script>
 
@@ -28,7 +39,7 @@ export default {
       v-for="(opt, index) in options"
       :key="index"
       :class="{ 'disabled-data': opt.disabled, 'btn-large': true }"
-      @click="opt.disabled = !opt.disabled"
+      @click="activeData(opt)"
     >
       {{ opt.name }}
     </a>

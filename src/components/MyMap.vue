@@ -22,7 +22,28 @@ export default {
             maxZoom: 19,
             depts: {},
             circles: [],
-            formatDataCodiv: {}
+            formatDataCodiv: {},
+            layers: [{
+                name: 'Deaths',
+                id: 'dc',
+                color: '#ff033e',
+                state: true
+            }, {
+                name: 'Hospitalized',
+                id: 'hosp',
+                color: '#ffff00',
+                state: false
+            }, {
+                name: 'Critical care',
+                id: 'rea',
+                color: '#1de9b6',
+                state: false
+            }, {
+                name: 'Healed',
+                id: 'rad',
+                color: '#00e5ff',
+                state: false
+            } ]
         }
     },
 
@@ -32,8 +53,19 @@ export default {
 
     mounted() {
         this.$nextTick(() => {
-            console.log(this.$refs.featureGroup);
+            // console.log(this.$refs.myMap.mapObject.eachLayer(function(layer){
+            //     console.log(layer);
+            // }));
         });
+
+        this.$root.$on('active-data', function (id, state) {
+            let layer = this.layers.find((layer) => {
+                if (layer.id === id) {
+                    return layer;
+                }
+            });
+            layer.state = state;
+        }.bind(this));
     },
 
     methods: {
@@ -98,17 +130,18 @@ export default {
             console.log(this.circles);
         },
 
-        getRadius(dep) {
-            return Math.sqrt(this.formatDataCodiv[dep]['2020-05-06'].dc) * 1000;
+        getRadius(dep, layer) {
+            return Math.sqrt(this.formatDataCodiv[dep]['2020-05-06'][layer.id]) * 1000;
         },
 
-        getContentTooltip(circle) {
+        getContentTooltip(circle, layer) {
             const dep = circle.properties.code;
+            const color = layer.color;
 
-            return `<span style='color:#ff033e; font-weight: bold'> ${circle.properties.nom} ${dep} </span>
+            return `<span style='color: ${color}; font-weight: bold'> ${circle.properties.nom} ${dep} </span>
                     <div>
-                        <span> Deaths: </span>
-                        <span> ${this.formatDataCodiv[dep]['2020-05-06'].dc} </span>
+                        <span> ${layer.name}: </span>
+                        <span> ${this.formatDataCodiv[dep]['2020-05-06'][layer.id]} </span>
                     </div>`
         }
     }
@@ -118,6 +151,7 @@ export default {
 <template>
     <div class="my-map card-panel hoverable">
         <l-map
+            ref="myMap"
             :zoom="zoom"
             :center="center"
         >
@@ -128,18 +162,22 @@ export default {
                 :maxZoom="maxZoom"
             >
             </l-tile-layer>
-            <l-feature-group ref="featureGroup">
+            <l-feature-group
+                v-for="(layer, index) in layers"
+                :visible="layer.state"
+                :ref="layer.id"
+                :key="index"
+            >
                 <l-circle
                     v-for="(circle, index) in circles"
                     :key="index"
                     :lat-lng="[circle.geometry.coordinates[1], circle.geometry.coordinates[0]]"
-                    :radius="getRadius(circle.properties.code)"
+                    :radius="getRadius(circle.properties.code, layer)"
                     :weight="0"
-                    fillColor="#ff033e"
+                    :fillColor="layer.color"
                     :fillOpacity="0.8"
-
                 >
-                    <l-popup :content="getContentTooltip(circle)">
+                    <l-popup :content="getContentTooltip(circle, layer)">
                     </l-popup>
                 </l-circle>
 
