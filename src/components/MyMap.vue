@@ -14,8 +14,8 @@ export default {
     },
     data() {
         return {
-            zoom: 3,
-            center: latLng(47.41322, -1.219482),
+            zoom: 6,
+            center: latLng(46.9052455464292, 2.8125),
             url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
             subdomains: 'abcd',
@@ -107,7 +107,7 @@ export default {
 
             return `<span style='color:#ff033e; font-weight: bold'> ${circle.properties.nom} ${dep} </span>
                     <div>
-                        <span> Décès: </span>
+                        <span> Deaths: </span>
                         <span> ${this.formatDataCodiv[dep]['2020-05-06'].dc} </span>
                     </div>`
         }
