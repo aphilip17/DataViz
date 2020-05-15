@@ -143,6 +143,11 @@ export default {
                         <span> ${layer.name}: </span>
                         <span> ${this.formatDataCodiv[dep]['2020-05-06'][layer.id]} </span>
                     </div>`
+        },
+
+        onSelectCircle(evt, circle) {
+            const dataForOneDep = this.formatDataCodiv[circle.properties.code];
+            this.$root.$emit('select-dept', circle.properties, dataForOneDep);
         }
     }
 }
@@ -176,6 +181,9 @@ export default {
                     :weight="0"
                     :fillColor="layer.color"
                     :fillOpacity="0.8"
+                    @click="(evt) => {
+                        onSelectCircle(evt, circle);
+                    }"
                 >
                     <l-popup :content="getContentTooltip(circle, layer)">
                     </l-popup>
