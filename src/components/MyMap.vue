@@ -1,6 +1,6 @@
 <script>
 import { latLng } from 'leaflet';
-import { LMap, LTileLayer, LFeatureGroup, LCircle, LPopup } from 'vue2-leaflet';
+import { LMap, LTileLayer, LFeatureGroup, LCircle, LPopup, LControlLayers } from 'vue2-leaflet';
 import Centroid from '@turf/centroid';
 
 export default {
@@ -11,6 +11,7 @@ export default {
         LFeatureGroup,
         LCircle,
         LPopup,
+        LControlLayers,
     },
     data() {
         return {
@@ -53,6 +54,7 @@ export default {
 
     mounted() {
         this.$nextTick(() => {
+            this.addLayerToControlLayers();
             // console.log(this.$refs.myMap.mapObject.eachLayer(function(layer){
             //     console.log(layer);
             // }));
@@ -150,6 +152,17 @@ export default {
             const dataDep = this.formatDataCodiv[circle.properties.code];
 
             this.$root.$emit('select-dept', circle.properties, dataDep, selectedDataType.id);
+        },
+
+        addLayerToControlLayers() {
+            /* Add layers to controlLayers by hand. For some reasons only one layer is added
+            using the declarative rendering in the template. */
+            const layersControl = this.$refs.layersControl.mapObject;
+
+            layersControl.addBaseLayer(this.$refs.dc[0].mapObject, 'Deaths');
+            layersControl.addBaseLayer(this.$refs.rad[0].mapObject, 'Healed');
+            layersControl.addBaseLayer(this.$refs.rea[0].mapObject, 'Critical care');
+            layersControl.addBaseLayer(this.$refs.hosp[0].mapObject, 'Hospitalized');
         }
     }
 }
@@ -169,9 +182,14 @@ export default {
                 :maxZoom="maxZoom"
             >
             </l-tile-layer>
+            <l-control-layers
+                position="topright"
+                ref="layersControl"
+            ></l-control-layers>
             <l-feature-group
                 v-for="(layer, index) in layers"
                 :visible="layer.state"
+                :name="layer.name"
                 :ref="layer.id"
                 :key="index"
             >
