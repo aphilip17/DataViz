@@ -91,26 +91,23 @@ export default {
                     }
 
                     if (accu[elem.dep]) {
-                        accu[elem.dep][elem.jour] = {
-                                hosp: elem.hosp,
-                                dc: elem.dc,
-                                rad: elem.rad,
-                                rea: elem.rea
-                        }
-
+                        accu[elem.dep].dates.push(elem.jour);
+                        accu[elem.dep].hosp.push(elem.hosp);
+                        accu[elem.dep].dc.push(elem.dc);
+                        accu[elem.dep].rad.push(elem.rad);
+                        accu[elem.dep].rea.push(elem.rea);
                     } else {
-
                         accu[elem.dep] = {
-                            [elem.jour] : {
-                                hosp: elem.hosp,
-                                dc: elem.dc,
-                                rad: elem.rad,
-                                rea: elem.rea
-                            }
+                            dates: [elem.jour],
+                            hosp: [elem.hosp],
+                            dc: [elem.dc],
+                            rad: [elem.rad],
+                            rea: [elem.rea]
                         }
                     }
 
                     return accu;
+
                 }, {})
 
                 console.log(this.formatDataCodiv);
@@ -131,23 +128,28 @@ export default {
         },
 
         getRadius(dep, layer) {
-            return Math.sqrt(this.formatDataCodiv[dep]['2020-05-06'][layer.id]) * 1000;
+            const data = this.formatDataCodiv[dep][layer.id];
+
+            return Math.sqrt(data[data.length - 1]) * 1000;
         },
 
         getContentTooltip(circle, layer) {
             const dep = circle.properties.code;
             const color = layer.color;
+            const data = this.formatDataCodiv[dep][layer.id];
 
             return `<span style='color: ${color}; font-weight: bold'> ${circle.properties.nom} ${dep} </span>
                     <div>
                         <span> ${layer.name}: </span>
-                        <span> ${this.formatDataCodiv[dep]['2020-05-06'][layer.id]} </span>
+                        <span> ${data[data.length - 1]} </span>
                     </div>`
         },
 
         onSelectCircle(evt, circle) {
-            const dataForOneDep = this.formatDataCodiv[circle.properties.code];
-            this.$root.$emit('select-dept', circle.properties, dataForOneDep);
+            const selectedDataType = this.layers.find((elem) => elem.state );
+            const dataDep = this.formatDataCodiv[circle.properties.code];
+
+            this.$root.$emit('select-dept', circle.properties, dataDep, selectedDataType.id);
         }
     }
 }

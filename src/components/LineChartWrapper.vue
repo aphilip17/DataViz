@@ -14,23 +14,14 @@ export default {
   },
 
   mounted () {
-     this.$root.$on('select-dept', function (props, data) {
+     this.$root.$on('select-dept', function (props, data, type) {
 
-        const labels = Object.keys(data).filter((elem, idx) => {
-            return idx%7===0;
+        const labels = data.dates.filter((elem, idx) => {
+            return idx % 7 === 0;
         });
 
-        const datas = Object.values(data).reduce((acc, elem) => {
-            if ('dc' in acc) {
-                acc['dc'].push(elem.dc)
-            } else {
-                acc['dc'] = [elem.dc]
-            }
-
-            return acc;
-
-        }, {}).dc.filter((el, idx) => {
-            return idx%7===0;
+        const datas = data[type].filter((el, idx) => {
+            return idx % 7 === 0;
         });
 
         this.datacollection = {
