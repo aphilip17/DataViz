@@ -14,13 +14,9 @@ export default {
   },
 
   mounted () {
-     this.$root.$on('select-dept', function (props, data, type) {
+     this.$root.$on('select-dept', function (props, data) {
 
         const labels = data.dates.filter((elem, idx) => {
-            return idx % 7 === 0;
-        });
-
-        const datas = data[type].filter((el, idx) => {
             return idx % 7 === 0;
         });
 
@@ -28,12 +24,41 @@ export default {
             labels: labels,
             datasets: [
             {
-                label: 'Deaths by department',
+                label: 'Deaths',
                 backgroundColor: '#f87979',
                 borderColor: '#f87989',
                 borderWidth: 1,
                 fill: false,
-                data: datas,
+                data: data.dc.filter((el, idx) => {
+                    return idx % 7 === 0;
+                }),
+            }, {
+                label: 'Hospitalized',
+                backgroundColor: '#ffff00',
+                borderColor: '#ffff00',
+                borderWidth: 1,
+                fill: false,
+                data: data.hosp.filter((el, idx) => {
+                    return idx % 7 === 0;
+                }),
+            }, {
+                label: 'Critical care',
+                backgroundColor: '#1de9b6',
+                borderColor: '#1de9b6',
+                borderWidth: 1,
+                fill: false,
+                data: data.rea.filter((el, idx) => {
+                    return idx % 7 === 0;
+                }),
+            }, {
+                label: 'Healed',
+                backgroundColor: '#00e5ff',
+                borderColor: '#00e5ff',
+                borderWidth: 1,
+                fill: false,
+                data: data.rad.filter((el, idx) => {
+                    return idx % 7 === 0;
+                }),
             }]
         }
     }.bind(this));
