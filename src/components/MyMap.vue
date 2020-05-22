@@ -24,6 +24,11 @@ export default {
             depts: {},
             circles: [],
             formatDataCodiv: {},
+            selectedFeature: {},
+            selectedCircleProp: {
+                code: 75,
+                nom: 'Paris'
+            },
             layers: [{
                 name: 'Deaths',
                 id: 'dc',
@@ -52,12 +57,32 @@ export default {
         this.displayCircles();
     },
 
+    watch: {
+        selectedFeature: function() {
+            this.selectedFeature.setStyle({ fillOpacity: 1 });
+            this.selectedFeature.openPopup();
+
+            /* For charts */
+            const dataDep = this.formatDataCodiv[this.selectedCircleProp.code];
+            this.$root.$emit('select-dept', this.selectedCircleProp, dataDep);
+        }
+    },
+
     mounted() {
         this.$nextTick(() => {
             this.addLayerToControlLayers();
-            // console.log(this.$refs.myMap.mapObject.eachLayer(function(layer){
-            //     console.log(layer);
-            // }));
+            /* Circles are not yet available in refs even in the $nextTick function. Why ? */
+            setTimeout(function() {
+                /* When the map is rendering the first time select the circle of Paris by default. */
+                this.selectedFeature = this.$refs.parisdc[0].mapObject;
+
+            }.bind(this), 2000);
+
+            this.$refs.myMap.mapObject.on('baselayerchange', function(ly) {
+                const layer = this.layers.find((el) => { return el.name === ly.name });
+                this.selectedFeature = this.$refs['paris'+layer.id][0].mapObject;
+
+            }.bind(this));
         });
 
         this.$root.$on('active-data', function (id, state) {
@@ -147,11 +172,17 @@ export default {
                     </div>`
         },
 
-        onSelectCircle(evt, circle) {
-            const selectedDataType = this.layers.find((elem) => elem.state );
-            const dataDep = this.formatDataCodiv[circle.properties.code];
+        getParisCircle(circle, layer) {
+            if (circle.properties.code === '75') {
+                return 'paris' + layer.id;
+            }
+        },
 
-            this.$root.$emit('select-dept', circle.properties, dataDep, selectedDataType.id);
+        onSelectCircle(evt, circle) {
+            /* Reset original opacity. */
+            this.selectedFeature.setStyle({ fillOpacity: 0.2 });
+            this.selectedFeature = evt.target;
+            this.selectedCircleProp = circle.properties;
         },
 
         addLayerToControlLayers() {
@@ -189,23 +220,27 @@ export default {
             <l-feature-group
                 v-for="(layer, index) in layers"
                 :visible="layer.state"
-                :name="layer.name"
                 :ref="layer.id"
                 :key="index"
             >
                 <l-circle
                     v-for="(circle, index) in circles"
                     :key="index"
+                    :ref="getParisCircle(circle, layer)"
+                    :name="circle.properties.code + layer.id"
                     :lat-lng="[circle.geometry.coordinates[1], circle.geometry.coordinates[0]]"
                     :radius="getRadius(circle.properties.code, layer)"
-                    :weight="0"
+                    :weight="2"
+                    :color="layer.color"
                     :fillColor="layer.color"
-                    :fillOpacity="0.8"
+                    :fillOpacity="0.2"
                     @click="(evt) => {
                         onSelectCircle(evt, circle);
                     }"
                 >
-                    <l-popup :content="getContentTooltip(circle, layer)">
+                    <l-popup
+                        :content="getContentTooltip(circle, layer)"
+                    >
                     </l-popup>
                 </l-circle>
 
