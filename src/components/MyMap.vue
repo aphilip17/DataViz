@@ -1,8 +1,7 @@
 <script>
 import { latLng } from 'leaflet';
 import { LMap, LTileLayer, LFeatureGroup, LCircle, LPopup, LControlLayers } from 'vue2-leaflet';
-import Centroid from '@turf/centroid';
-import { useFetchGeojson, useFetchDataCovid } from '../composition/fetcher';
+import { useFetchGeojson, useFetchDataCovid, useGetPolygonCentroid } from '../composition/fetcher';
 
 export default {
     setup () {
@@ -14,13 +13,20 @@ export default {
         const {
             data: formatDataCodiv,
             fetchData: fetchDataCovid,
-        } = useFetchDataCovid('http://localhost:8080/hpCovid.json')
+        } = useFetchDataCovid('http://localhost:8080/hpCovid.json');
+
+        const {
+            centroid: circles,
+            getCentroid: getCentroid
+        } = useGetPolygonCentroid(depts);
 
         return {
             depts,
             fetchDeptGeometries,
             formatDataCodiv,
-            fetchDataCovid
+            fetchDataCovid,
+            circles,
+            getCentroid,
         }
     },
     name: 'my-map',
@@ -40,7 +46,6 @@ export default {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
             subdomains: 'abcd',
             maxZoom: 19,
-            circles: [],
             selectedFeature: {},
             selectedCircleProp: {
                 code: 75,
@@ -116,11 +121,7 @@ export default {
         async displayCircles() {
             await this.fetchDeptGeometries();
             await this.fetchDataCovid();
-            this.circles = this.depts.features.map((dpt) => {
-                return Centroid(dpt, dpt.properties);
-            });
-
-            console.log(this.circles);
+            this.getCentroid();
         },
 
         getRadius(dep, layer) {
