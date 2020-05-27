@@ -2,8 +2,27 @@
 import { latLng } from 'leaflet';
 import { LMap, LTileLayer, LFeatureGroup, LCircle, LPopup, LControlLayers } from 'vue2-leaflet';
 import Centroid from '@turf/centroid';
+import { useFetchGeojson, useFetchDataCovid } from '../composition/fetcher';
 
 export default {
+    setup () {
+        const {
+            data: depts,
+            fetchData: fetchDeptGeometries,
+        } = useFetchGeojson('http://localhost:8080/depts.json');
+
+        const {
+            data: formatDataCodiv,
+            fetchData: fetchDataCovid,
+        } = useFetchDataCovid('http://localhost:8080/hpCovid.json')
+
+        return {
+            depts,
+            fetchDeptGeometries,
+            formatDataCodiv,
+            fetchDataCovid
+        }
+    },
     name: 'my-map',
     components: {
         LMap,
@@ -21,9 +40,7 @@ export default {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
             subdomains: 'abcd',
             maxZoom: 19,
-            depts: {},
             circles: [],
-            formatDataCodiv: {},
             selectedFeature: {},
             selectedCircleProp: {
                 code: 75,
@@ -96,57 +113,9 @@ export default {
     },
 
     methods: {
-        async getDeptsGeojson() {
-            try {
-                const response = await fetch('http://localhost:8080/depts.json');
-                this.depts = await response.json();
-                console.log(this.depts);
-            } catch (error) {
-                console.log(error);
-            }
-        },
-
-        async getHpCodivData() {
-            try {
-                const response = await fetch('http://localhost:8080/hpCovid.json');
-                const data = await response.json();
-
-                this.formatDataCodiv = data.reduce((accu, elem) => {
-
-                    if (elem.sexe !== 0) {
-                        return accu;
-                    }
-
-                    if (accu[elem.dep]) {
-                        accu[elem.dep].dates.push(elem.jour);
-                        accu[elem.dep].hosp.push(elem.hosp);
-                        accu[elem.dep].dc.push(elem.dc);
-                        accu[elem.dep].rad.push(elem.rad);
-                        accu[elem.dep].rea.push(elem.rea);
-                    } else {
-                        accu[elem.dep] = {
-                            dates: [elem.jour],
-                            hosp: [elem.hosp],
-                            dc: [elem.dc],
-                            rad: [elem.rad],
-                            rea: [elem.rea]
-                        }
-                    }
-
-                    return accu;
-
-                }, {})
-
-                console.log(this.formatDataCodiv);
-
-            } catch (error) {
-                console.log(error);
-            }
-        },
-
         async displayCircles() {
-            await this.getDeptsGeojson();
-            await this.getHpCodivData();
+            await this.fetchDeptGeometries();
+            await this.fetchDataCovid();
             this.circles = this.depts.features.map((dpt) => {
                 return Centroid(dpt, dpt.properties);
             });
