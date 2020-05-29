@@ -79,30 +79,26 @@ export default {
         this.displayCircles();
     },
 
-    watch: {
-        selectedFeature: function() {
-            this.selectedFeature.setStyle({ fillOpacity: 1 });
-            this.selectedFeature.openPopup();
+    // watch: {
+    //     selectedFeature: function() {
+    //         this.selectedFeature.setStyle({ fillOpacity: 1 });
+    //         this.selectedFeature.openPopup();
 
-            /* For charts */
-            const dataDep = this.formatDataCodiv[this.selectedCircleProp.code];
-            this.$root.$emit('select-dept', this.selectedCircleProp, dataDep);
-        }
-    },
+    //         /* For charts */
+    //         const dataDep = this.formatDataCodiv[this.selectedCircleProp.code];
+    //         this.$root.$emit('select-dept', this.selectedCircleProp, dataDep);
+    //     }
+    // },
 
     mounted() {
         this.$nextTick(() => {
             this.addLayerToControlLayers();
-            /* Circles are not yet available in refs even in the $nextTick function. Why ? */
-            setTimeout(function() {
-                /* When the map is rendering the first time select the circle of Paris by default. */
-                this.selectedFeature = this.$refs.parisdc[0].mapObject;
 
-            }.bind(this), 2000);
+            this.$refs.myMap.mapObject.on('baselayerchange', function() {
+                // const layer = this.layers.find((el) => { return el.name === ly.name });
+                this.selectedFeature = {};
 
-            this.$refs.myMap.mapObject.on('baselayerchange', function(ly) {
-                const layer = this.layers.find((el) => { return el.name === ly.name });
-                this.selectedFeature = this.$refs['paris'+layer.id][0].mapObject;
+                this.$root.$emit('clear-selection');
 
             }.bind(this));
         });
@@ -142,17 +138,19 @@ export default {
                     </div>`
         },
 
-        getParisCircle(circle, layer) {
-            if (circle.properties.code === '75') {
-                return 'paris' + layer.id;
-            }
-        },
-
         onSelectCircle(evt, circle) {
             /* Reset original opacity. */
-            this.selectedFeature.setStyle({ fillOpacity: 0.2 });
+            if (this.selectedFeature.setStyle) {
+                this.selectedFeature.setStyle({ fillOpacity: 0.2 });
+            }
+
             this.selectedFeature = evt.target;
+            this.selectedFeature.setStyle({ fillOpacity: 1 });
             this.selectedCircleProp = circle.properties;
+
+            /* For charts */
+            const dataDep = this.formatDataCodiv[this.selectedCircleProp.code];
+            this.$root.$emit('select-dept', this.selectedCircleProp, dataDep);
         },
 
         addLayerToControlLayers() {
@@ -196,7 +194,6 @@ export default {
                 <l-circle
                     v-for="(circle, index) in circles"
                     :key="index"
-                    :ref="getParisCircle(circle, layer)"
                     :name="circle.properties.code + layer.id"
                     :lat-lng="[circle.geometry.coordinates[1], circle.geometry.coordinates[0]]"
                     :radius="getRadius(circle.properties.code, layer)"

@@ -6,7 +6,8 @@ export default {
   data () {
     return {
         /* initializing the chart-data with null will throw an vue error */
-        datacollection: { labels: [''], datasets: []}
+        datacollection: { labels: [''], datasets: []},
+        clearSelection: 0
     }
   },
   components: {
@@ -14,7 +15,7 @@ export default {
   },
 
   mounted () {
-     this.$root.$on('select-dept', function (props, data) {
+    this.$root.$on('select-dept', (props, data) => {
 
         const labels = data.dates.filter((elem, idx) => {
             return idx % 7 === 0;
@@ -61,6 +62,10 @@ export default {
                 }),
             }]
         }
+    });
+
+    this.$root.$on('clear-selection', function() {
+        this.clearSelection = ++this.clearSelection;
     }.bind(this));
   },
 }
@@ -69,6 +74,7 @@ export default {
 <template>
     <line-chart
         :chart-data="datacollection"
+        :clear-selection="clearSelection"
         class="card-panel hoverable line-chart"
     ></line-chart>
 </template>
