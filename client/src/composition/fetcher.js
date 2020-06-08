@@ -1,5 +1,6 @@
 import { ref } from '@vue/composition-api';
 import Centroid from '@turf/centroid';
+import CovidServices from '../services/CovidServices';
 
 export function useFetchGeojson(url) {
 
@@ -21,7 +22,7 @@ export function useFetchGeojson(url) {
     }
 }
 
-export function useFetchDataCovid(url) {
+export function useFetchDataCovid() {
 
     const data = ref([]);
 
@@ -55,10 +56,10 @@ export function useFetchDataCovid(url) {
 
     const fetchData = async function() {
         try {
-            const promise = await fetch(url);
-            const data = await promise.json();
+            const res = await CovidServices.getHospData();
+            const resData = res.data;
 
-            formatData(data);
+            formatData(resData);
 
         } catch (error) {
             console.log(error);

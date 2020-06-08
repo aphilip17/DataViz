@@ -13,7 +13,7 @@ export default {
         const {
             data: formatDataCodiv,
             fetchData: fetchDataCovid,
-        } = useFetchDataCovid('http://localhost:8080/hpCovid.json');
+        } = useFetchDataCovid();
 
         const {
             centroid: circles,
