@@ -8,6 +8,8 @@ const url = "https://www.data.gouv.fr/fr/datasets/r/63352e38-d353-4b54-bfd1-f1b3
 
 const csv = require('csvtojson');
 
+const Covid = require('./models/covid');
+
 const app = express();
 
 app.use(morgan('combined'));
@@ -16,6 +18,13 @@ app.use(cors());
 
 app.get('/covid', async (eq, res) => {
     const json = await fetchCsv();
+    const response = await fetch(url);
+    const csvStr = await response.text();
+
+    Covid.create(csvStr, () => {
+        console.log('Everything is saved in db')
+
+    });
 
     res.send(json);
 });
