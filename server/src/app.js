@@ -18,7 +18,9 @@ app.use(cors());
 
 app.get('/covid', (eq, res) => {
 
-    res.send();
+    Covid.getAllData((data) => {
+        res.send(data);
+    });
 });
 
 

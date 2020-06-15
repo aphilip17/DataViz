@@ -11,16 +11,26 @@ class Covid {
 
         connection.query(sql, [csvRows], (err) => {
             if (err) throw err;
-            connection.end();
+            // connection.end();
         });
 
     }
 
     static empty () {
         const sql = 'TRUNCATE TABLE Covid';
-        connection.query(sql, function (err) {
+        connection.query(sql, (err) => {
             if (err) throw err;
             console.log('Table emptied');
+        });
+    }
+
+    static getAllData (callback) {
+        const sql = 'SELECT * FROM Covid';
+        connection.query(sql, (err, results) => {
+            if (err) throw err;
+            if (callback) {
+                callback(results);
+            }
         });
     }
 

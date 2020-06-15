@@ -29,19 +29,19 @@ export function useFetchDataCovid() {
     const formatData = function(resp) {
         data.value = resp.reduce((accu, elem) => {
 
-            if (elem.sexe !== 0) {
+            if (elem.sex !== 0) {
                 return accu;
             }
 
-            if (accu[elem.dep]) {
-                accu[elem.dep].dates.push(elem.jour);
-                accu[elem.dep].hosp.push(elem.hosp);
-                accu[elem.dep].dc.push(elem.dc);
-                accu[elem.dep].rad.push(elem.rad);
-                accu[elem.dep].rea.push(elem.rea);
+            if (accu[elem.dept]) {
+                accu[elem.dept].dates.push(elem.date);
+                accu[elem.dept].hosp.push(elem.hosp);
+                accu[elem.dept].dc.push(elem.dc);
+                accu[elem.dept].rad.push(elem.rad);
+                accu[elem.dept].rea.push(elem.rea);
             } else {
-                accu[elem.dep] = {
-                    dates: [elem.jour],
+                accu[elem.dept] = {
+                    dates: [elem.date],
                     hosp: [elem.hosp],
                     dc: [elem.dc],
                     rad: [elem.rad],
