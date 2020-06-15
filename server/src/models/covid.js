@@ -6,10 +6,22 @@ connection.on('error', (err) => {
 });
 
 class Covid {
-    static create (content) {
-        console.log(connection);
-        console.log(content);
+    static create (csvRows) {
+        const sql = 'INSERT INTO Covid (dept, sex, date, hosp, rea, rad, dc) VALUES ?';
 
+        connection.query(sql, [csvRows], (err) => {
+            if (err) throw err;
+            connection.end();
+        });
+
+    }
+
+    static empty () {
+        const sql = 'TRUNCATE TABLE Covid';
+        connection.query(sql, function (err) {
+            if (err) throw err;
+            console.log('Table emptied');
+        });
     }
 
 }

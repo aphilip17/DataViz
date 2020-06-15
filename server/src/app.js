@@ -16,50 +16,36 @@ app.use(morgan('combined'));
 app.use(bodyParser.json());
 app.use(cors());
 
-app.get('/covid', async (eq, res) => {
-    const json = await fetchCsv();
-    const response = await fetch(url);
-    const csvStr = await response.text();
+app.get('/covid', (eq, res) => {
 
-    Covid.create(csvStr, () => {
-        console.log('Everything is saved in db')
-
-    });
-
-    res.send(json);
+    res.send();
 });
+
+
+const insertDataCovidInDb = async () => {
+    const csvRow = await fetchCsv();
+    Covid.empty();
+    Covid.create(csvRow);
+}
 
 const fetchCsv = async () => {
     try {
         const response = await fetch(url);
         const csvStr = await response.text();
 
-        const jsonArray = await csv({
+        const csvRow = await csv({
             delimiter: [";"],
-            colParser: {
-                'sexe': {
-                    cellParser: 'number'
-                },
-                'hosp': {
-                    cellParser: 'number'
-                },
-                'rea': {
-                    cellParser: 'number'
-                },
-                'rad': {
-                    cellParser: 'number'
-                },
-                'dc': {
-                    cellParser: 'number'
-                }
-            },
+            output: 'csv',
         })
         .fromString(csvStr)
 
-        return jsonArray;
+        return csvRow;
     } catch(error) {
         console.log(error);
     }
 }
+
+/** To fixed: Get data from gouv and insert data in db each time the server is started. */
+insertDataCovidInDb();
 
 app.listen(process.env.PORT || 8081);
