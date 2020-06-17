@@ -8,7 +8,7 @@ export default {
         const {
             data: depts,
             fetchData: fetchDeptGeometries,
-        } = useFetchGeojson('http://localhost:8080/depts.json');
+        } = useFetchGeojson();
 
         const {
             data: formatDataCodiv,

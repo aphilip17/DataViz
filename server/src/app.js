@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const morgan = require('morgan');
+const fs = require('fs');
 
 const fetch = require('node-fetch');
 const url = "https://www.data.gouv.fr/fr/datasets/r/63352e38-d353-4b54-bfd1-f1b3ee1cabd7";
@@ -23,6 +24,14 @@ app.get('/covid', (eq, res) => {
     });
 });
 
+app.get('/depts', (eq, res) => {
+
+    fs.readFile('./data/depts.json', (err, json) => {
+        let obj = JSON.parse(json);
+
+        res.send(obj);
+    });
+});
 
 const insertDataCovidInDb = async () => {
     const csvRow = await fetchCsv();
