@@ -30,6 +30,17 @@ class Covid {
           callback(results);
       }
     });
+	}
+
+	static getLastDay (callback) {
+    const sql = 'SELECT * FROM Covid WHERE date IN (SELECT MAX(date) FROM Covid)';
+
+    connection.query(sql, (err, results) => {
+      if (err) throw err;
+      if (callback) {
+          callback(results);
+      }
+    });
   }
 }
 

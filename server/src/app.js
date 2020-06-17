@@ -19,8 +19,10 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.get('/covid', (eq, res) => {
-  Covid.getAllData((data) => {
-    res.send(data);
+  Covid.getLastDay((data) => {
+		const dataFormatted = formatData(data);
+		console.log(dataFormatted);
+    res.send(JSON.stringify(dataFormatted));
   });
 });
 
@@ -31,6 +33,29 @@ app.get('/depts', (eq, res) => {
     res.send(obj);
   });
 });
+
+const formatData = (resp) => {
+	return resp.reduce((map, elem) => {
+		let dataHosp = {
+			hosp: elem.hosp,
+			dc: elem.dc,
+			rad: elem.rad,
+			rea: elem.rea
+		};
+
+		if (map[elem.dept]) {
+			map[elem.dept][elem.sex] = dataHosp;
+		} else {
+
+			map[elem.dept] = {
+				[elem.sex]: dataHosp
+			};
+		}
+
+		return map;
+
+		}, {})
+}
 
 const insertDataCovidInDb = async () => {
   const csvRow = await fetchCsv();
