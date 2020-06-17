@@ -57,7 +57,7 @@ export default {
 		} = useFetchGeojson();
 
 		const {
-				data: formatDataCodiv,
+				data: dataCodiv,
 				fetchData: fetchDataCovid,
 		} = useFetchDataCovid();
 
@@ -69,7 +69,7 @@ export default {
 		return {
 				depts,
 				fetchDeptGeometries,
-				formatDataCodiv,
+				dataCodiv,
 				fetchDataCovid,
 				circles,
 				getCentroid,
@@ -156,20 +156,20 @@ export default {
 		},
 
 		getRadius(dep, layer) {
-			const data = this.formatDataCodiv[dep][layer.id];
+			const data = this.dataCodiv[dep][0][layer.id];
 
-			return Math.sqrt(data[data.length - 1]) * 1000;
+			return Math.sqrt(data) * 1000;
 		},
 
 		getContentTooltip(circle, layer) {
 			const dep = circle.properties.code;
 			const color = layer.color;
-			const data = this.formatDataCodiv[dep][layer.id];
+			const data = this.dataCodiv[dep][0][layer.id];
 
 			return `<span style='color: ${color}; font-weight: bold'> ${circle.properties.nom} ${dep} </span>
 							<div>
 									<span> ${layer.name}: </span>
-									<span> ${data[data.length - 1]} </span>
+									<span> ${data} </span>
 							</div>`
 		},
 
@@ -184,7 +184,7 @@ export default {
 			this.selectedCircleProp = circle.properties;
 
 			/* For charts */
-			const dataDep = this.formatDataCodiv[this.selectedCircleProp.code];
+			const dataDep = this.dataCodiv[this.selectedCircleProp.code][0];
 			this.$root.$emit('select-dept', this.selectedCircleProp, dataDep);
 		},
 
