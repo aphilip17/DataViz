@@ -59,7 +59,19 @@ const formatData = (resp) => {
 			map[elem.dept] = {
 				[elem.sex]: dataHosp
 			};
-		}
+    }
+
+    /* Total */
+    if (elem.sex === 0) {
+      if (map['total']) {
+        map.total.hosp = map.total.hosp + elem.hosp;
+        map.total.dc = map.total.dc + elem.dc;
+        map.total.rad = map.total.rad + elem.rad;
+        map.total.rea = map.total.rea + elem.rea;
+      } else {
+        map['total'] = Object.assign({}, dataHosp);
+      }
+    }
 
 		return map;
 

@@ -104,7 +104,7 @@ export default {
 			}, {
 				name: 'Hospitalized',
 				id: 'hosp',
-				color: '#e0115f',
+				color: '#ff6347',
 				state: false
 			}, {
 				name: 'Critical care',
@@ -121,7 +121,7 @@ export default {
 	},
 
 	created() {
-		this.displayCircles();
+    this.displayCircles();
 	},
 
 	mounted() {
@@ -133,27 +133,31 @@ export default {
 			}.bind(this));
 		});
 
-		this.$root.$on('active-data', function (id, state) {
-			let layer = this.layers.find((layer) => {
-					if (layer.id === id) {
-							return layer;
-					}
-			});
-			layer.state = state;
-		}.bind(this));
+		// this.$root.$on('active-data', function (id, state) {
+		// 	let layer = this.layers.find((layer) => {
+		// 			if (layer.id === id) {
+		// 					return layer;
+		// 			}
+		// 	});
+		// 	layer.state = state;
+		// }.bind(this));
 	},
 
 	methods: {
 		async displayCircles() {
 			await this.fetchDeptGeometries();
 			await this.fetchDataCovid();
-			this.getCentroid();
+      this.getCentroid();
+
+      this.$root.$emit('refresh-data', this.dataCodiv.total);
 		},
 
 		getRadius(dep, layer) {
+      /* TODO: I should find the mutiplicator regarding the min and max value */
+      let multiplicator = layer.id === 'rea' ? 5000 : 1000;
 			const data = this.dataCodiv[dep][0][layer.id];
 
-			return Math.sqrt(data) * 1000;
+			return Math.sqrt(data) * multiplicator;
 		},
 
 		getContentTooltip(circle, layer) {
@@ -201,7 +205,7 @@ export default {
 <style scoped>
 .my-map {
 	height: 600px;
-	width: 50%;
+	width: 60%;
 	box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
 }
 </style>

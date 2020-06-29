@@ -4,12 +4,34 @@
         v-for="(opt, index) in options"
         :key="index"
         class="data-bar">
-      <p class="data-bar-title">
-        {{ opt.name }}
-      </p>
-      <p class="data-bar-data">
+      <p
+        v-if="opt.data !== 0"
+        class="data-bar-data">
         {{ opt.data }}
       </p>
+      <p
+        v-if="opt.data !== 0"
+        class="data-bar-title">
+        {{ opt.name }}
+      </p>
+      <div
+        class="data-bar-spinner"
+        v-else
+      >
+        <div class="preloader-wrapper big active">
+          <div class="spinner-layer spinner-green-only">
+            <div class="circle-clipper left">
+              <div class="circle"></div>
+            </div>
+            <div class="gap-patch">
+              <div class="circle"></div>
+            </div>
+            <div class="circle-clipper right">
+              <div class="circle"></div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="data-bar-img-container">
         <i class="material-icons medium"> {{ opt.icon }} </i>
       </div>
@@ -24,31 +46,40 @@ export default {
     return {
       options: [{
         disabled: true,
-        name: 'Hospitalized',
+        name: 'Hospitalisation',
         id: 'hosp',
-        data: 17135,
+        data: 0,
         icon: 'local_hospital',
       }, {
         disabled: true,
-        name: 'Critical care',
+        name: 'En réanimation',
         id: 'rea',
-        data: 1655,
+        data: 0,
         icon: 'local_hotel',
       }, {
         disabled: true,
-        name: 'Healed',
+        name: 'Retours à domicile',
         id: 'rad',
-        data: 64617,
+        data: 0,
         icon: 'house',
       }, {
         disabled: false,
-        name: 'Deaths',
+        name: 'Décès à l\'hopital',
         id: 'dc',
-        data: 28367,
+        data: 0,
         icon: 'sentiment_very_dissatisfied'
       }]
     }
   },
+
+  mounted() {
+    this.$root.$on('refresh-data', (data) => {
+      this.options[0].data = data.hosp;
+      this.options[1].data = data.rea;
+      this.options[2].data = data.rad;
+      this.options[3].data = data.dc;
+    });
+  }
 }
 </script>
 
@@ -67,16 +98,27 @@ export default {
 }
 
 .data-bar-title {
-  position: absolute;
-  top: 0px;
-  right: 15px;
-  font-weight: bold;
+  font-size: 15px;
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 15px;
+  margin-top: 0px;
 }
 
 .data-bar-data {
-  position: absolute;
-  top: 30px;
-  right: 15px;
+  font-size: 50px;
+  color: grey;
+  display: flex;
+  justify-content: flex-end;
+  margin: 0px 0px;
+  margin-right: 15px;
+}
+
+.data-bar-spinner {
+  display: flex;
+  justify-content: center;
+  /*align-items: center;*/ /* Does not work. I don't know why ? */
+  margin-top: 25px;
 }
 
 .data-bar-img-container {
