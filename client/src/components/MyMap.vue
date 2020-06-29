@@ -29,12 +29,13 @@
 					:color="layer.color"
 					:fillColor="layer.color"
 					:fillOpacity="0.2"
-					@click="(evt) => {
-							onSelectCircle(evt, circle);
-					}">
-					<l-popup
+					@mouseover="(evt) => {
+							onMouseOverCircle(evt);
+					}"
+          @mouseout="onMouseOutCircle()">
+					<l-tooltip
 						:content="getContentTooltip(circle, layer)">
-					</l-popup>
+					</l-tooltip>
 				</l-circle>
 			</l-feature-group>
 		</l-map>
@@ -44,7 +45,7 @@
 <script>
 /* Libs */
 import { latLng } from 'leaflet';
-import { LMap, LTileLayer, LFeatureGroup, LCircle, LPopup, LControlLayers } from 'vue2-leaflet';
+import { LMap, LTileLayer, LFeatureGroup, LCircle, LTooltip, LControlLayers } from 'vue2-leaflet';
 
 /* Utils */
 import { useFetchGeojson, useFetchDataCovid, useGetPolygonCentroid } from '../composition/fetcher';
@@ -82,7 +83,7 @@ export default {
 		LTileLayer,
 		LFeatureGroup,
 		LCircle,
-		LPopup,
+		LTooltip,
 		LControlLayers,
 	},
 
@@ -95,10 +96,6 @@ export default {
 			subdomains: 'abcd',
 			maxZoom: 19,
 			selectedFeature: {},
-			selectedCircleProp: {
-				code: 75,
-				nom: 'Paris'
-			},
 			layers: [{
 				name: 'Deaths',
 				id: 'dc',
@@ -107,7 +104,7 @@ export default {
 			}, {
 				name: 'Hospitalized',
 				id: 'hosp',
-				color: '#ffff00',
+				color: '#e0115f',
 				state: false
 			}, {
 				name: 'Critical care',
@@ -133,8 +130,6 @@ export default {
 
 			this.$refs.myMap.mapObject.on('baselayerchange', function() {
 				this.selectedFeature = {};
-				this.$root.$emit('clear-selection');
-
 			}.bind(this));
 		});
 
@@ -173,20 +168,21 @@ export default {
 							</div>`
 		},
 
-		onSelectCircle(evt, circle) {
-			/* Reset original opacity. */
-			if (this.selectedFeature.setStyle) {
-					this.selectedFeature.setStyle({ fillOpacity: 0.2 });
-			}
+		onMouseOverCircle(evt) {
+      this.selectedFeature = evt.target;
+      this.style = Object.assign({}, this.selectedFeature.options);
+      this.selectedFeature.setStyle({
+        fillOpacity: 0.2,
+        fillColor: 'blue',
+        color: 'blue',
+        opacity: 1,
+        weight: 2
+      });
+    },
 
-			this.selectedFeature = evt.target;
-			this.selectedFeature.setStyle({ fillOpacity: 1 });
-			this.selectedCircleProp = circle.properties;
-
-			/* For charts */
-			const dataDep = this.dataCodiv[this.selectedCircleProp.code][0];
-			this.$root.$emit('select-dept', this.selectedCircleProp, dataDep);
-		},
+    onMouseOutCircle() {
+      this.selectedFeature.setStyle(this.style);
+    },
 
 		addLayerToControlLayers() {
 			/* Add layers to controlLayers by hand. For some reasons only one layer is added

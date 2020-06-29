@@ -24,6 +24,7 @@ export default {
   },
 
   mounted () {
+    /* TODO: To refactor. Won't work this way anymore. */
     this.$root.$on('select-dept', (props, data) => {
 
       const labels = data.dates.filter((elem, idx) => {
@@ -72,7 +73,7 @@ export default {
 				}]
       }
     });
-
+    /* TODO: To refactor. Won't work this way anymore. */
     this.$root.$on('clear-selection', function() {
         this.clearSelection = ++this.clearSelection;
     }.bind(this));
