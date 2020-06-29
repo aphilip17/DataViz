@@ -3,6 +3,8 @@ const connection = require('../config/db');
 
 class Covid {
   static create (csvRows) {
+    this.empty();
+
     const sql = 'INSERT INTO Covid (dept, sex, date, hosp, rea, rad, dc) VALUES ?';
 
     connection.query(sql, [csvRows], (err) => {

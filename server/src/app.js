@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const fs = require('fs');
 const fetch = require('node-fetch');
 const csv = require('csvtojson');
+const schedule = require('node-schedule');
 
 /* Models */
 const Covid = require('./models/covid');
@@ -34,7 +35,14 @@ app.get('/depts', (eq, res) => {
   });
 });
 
-/* Should be in a helper file I guess */
+/* Each day at noon the data covid will be refreshed. */
+schedule.scheduleJob('00, 00, 12 * * 0-6', async () => {
+  const csvRow = await fetchCsv();
+
+  Covid.create(csvRow);
+});
+
+/* Should be in a helper file I guess. */
 const formatData = (resp) => {
 	return resp.reduce((map, elem) => {
 		let dataHosp = {
@@ -58,13 +66,7 @@ const formatData = (resp) => {
 		}, {})
 }
 
-const insertDataCovidInDb = async () => {
-  const csvRow = await fetchCsv();
-
-  Covid.empty();
-  Covid.create(csvRow);
-}
-
+/* Should be in a helper file I guess. */
 const fetchCsv = async () => {
   try {
     const response = await fetch(url);
@@ -80,8 +82,5 @@ const fetchCsv = async () => {
     console.log(error);
   }
 }
-
-/** To fixed: Get data from gouv and insert data in db each time the server is started. */
-insertDataCovidInDb();
 
 app.listen(process.env.PORT || 8081);
