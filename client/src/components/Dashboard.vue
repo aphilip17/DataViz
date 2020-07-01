@@ -1,9 +1,7 @@
 <template>
   <div>
     <data-bar></data-bar>
-    <div class="map-chart-container">
-      <my-map></my-map>
-    </div>
+    <my-map></my-map>
   </div>
 </template>
 
@@ -22,8 +20,5 @@ export default {
 </script>
 
 <style scoped>
-.map-chart-container {
-	display: flex;
-	margin: 20px;
-}
+
 </style>

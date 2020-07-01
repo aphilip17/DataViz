@@ -1,40 +1,23 @@
 <template>
-  <div class="data-bar-container">
+  <div
+    class="data-bar-container">
     <div
         v-for="(opt, index) in options"
         :key="index"
-        class="data-bar">
-      <p
+        class="data-bar"
+        :class="dataBarImgColor(opt.id)">
+
+      <span
         v-if="opt.data !== 0"
         class="data-bar-data">
         {{ opt.data }}
-      </p>
-      <p
+      </span>
+      <span
         v-if="opt.data !== 0"
         class="data-bar-title">
         {{ opt.name }}
-      </p>
-      <div
-        class="data-bar-spinner"
-        v-else
-      >
-        <div class="preloader-wrapper big active">
-          <div class="spinner-layer spinner-green-only">
-            <div class="circle-clipper left">
-              <div class="circle"></div>
-            </div>
-            <div class="gap-patch">
-              <div class="circle"></div>
-            </div>
-            <div class="circle-clipper right">
-              <div class="circle"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="data-bar-img-container">
-        <i class="material-icons medium"> {{ opt.icon }} </i>
-      </div>
+      </span>
+      <i class="material-icons medium"> {{ opt.icon }} </i>
     </div>
   </div>
 </template>
@@ -79,6 +62,18 @@ export default {
       this.options[2].data = data.rad;
       this.options[3].data = data.dc;
     });
+  },
+
+  methods: {
+
+    dataBarImgColor (id) {
+      return {
+        'data-bar-img-color-dc': id === 'dc',
+        'data-bar-img-color-rea': id === 'rea',
+        'data-bar-img-color-rad': id === 'rad',
+        'data-bar-img-color-hosp': id === 'hosp',
+      }
+    }
   }
 }
 </script>
@@ -86,55 +81,56 @@ export default {
 <style scoped>
 .data-bar-container {
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
 }
 
 .data-bar {
-  height: 120px;
-  width: 500px;
+  height: 115px;
+  width: 320px;
   margin: 20px;
   box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
   position: relative;
+  border-radius: 2px;
 }
 
 .data-bar-title {
   font-size: 15px;
   display: flex;
-  justify-content: flex-end;
-  margin-right: 15px;
-  margin-top: 0px;
+  justify-content: flex-start;
+  margin-left: 15px;
+  color: #FFFF;
 }
 
 .data-bar-data {
-  font-size: 50px;
-  color: grey;
+  font-size: 40px;
   display: flex;
-  justify-content: flex-end;
-  margin: 0px 0px;
-  margin-right: 15px;
+  justify-content: flex-start;
+  margin-top: 10px;
+  margin-left: 15px;
+  color: #FFFF;
 }
 
-.data-bar-spinner {
-  display: flex;
-  justify-content: center;
-  /*align-items: center;*/ /* Does not work. I don't know why ? */
-  margin-top: 25px;
+.data-bar-img-color-dc {
+    background: linear-gradient(0.25turn, #bc4e9c, #f80759);
 }
 
-.data-bar-img-container {
-  height: 100px;
-  width: 100px;
-  position: absolute;
-  top: -15px;
-  left: 15px;
-  background-color: #e0f2f1;
+.data-bar-img-color-rea {
+  background: linear-gradient(0.25turn, #ffe259, #ffa751);
+}
+
+.data-bar-img-color-rad {
+  background: linear-gradient(0.25turn, #78ffd6, #3cd3ad, #4cb8c4);
+}
+
+.data-bar-img-color-hosp {
+  background: linear-gradient(0.25turn, #a6ffcb, #12d8fa, #1fa2ff);
 }
 
 i {
   position: absolute;
   top: 50%;
-  left: 50%;
   transform: translate(-50%, -50%);
   color: white;
+  right: -10px;
 }
 </style>
