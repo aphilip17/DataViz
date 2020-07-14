@@ -1,23 +1,27 @@
 <template>
   <div
-    class="data-bar-container">
+    class="row">
     <div
         v-for="(opt, index) in options"
         :key="index"
+        class="col s12 m6 l3 data-bar-col">
+      <div
         class="data-bar"
-        :class="dataBarImgColor(opt.id)">
-
-      <span
-        v-if="opt.data !== 0"
-        class="data-bar-data">
-        {{ opt.data }}
-      </span>
-      <span
-        v-if="opt.data !== 0"
-        class="data-bar-title">
-        {{ opt.name }}
-      </span>
-      <i class="material-icons medium"> {{ opt.icon }} </i>
+        :class="dataBarBorderLeft(opt.id)">
+        <span
+          v-if="opt.data !== 0"
+          class="data-bar-data">
+          {{ opt.data }}
+        </span>
+        <span
+          v-if="opt.data !== 0"
+          class="data-bar-title">
+          {{ opt.name }}
+        </span>
+        <i class="material-icons medium"
+          :class="dataBarImgColor(opt.id)"> {{ opt.icon }}
+        </i>
+      </div>
     </div>
   </div>
 </template>
@@ -73,64 +77,83 @@ export default {
         'data-bar-img-color-rad': id === 'rad',
         'data-bar-img-color-hosp': id === 'hosp',
       }
+    },
+
+    dataBarBorderLeft (id) {
+      return {
+        'data-bar-border-color-dc': id === 'dc',
+        'data-bar-border-color-rea': id === 'rea',
+        'data-bar-border-color-rad': id === 'rad',
+        'data-bar-border-color-hosp': id === 'hosp',
+      }
     }
   }
 }
 </script>
 
 <style scoped>
-.data-bar-container {
-  display: flex;
-  justify-content: flex-start;
+
+.row .data-bar-col {
+  padding: 0 0.3rem; /* Override materialize padding */
 }
 
 .data-bar {
-  height: 115px;
-  width: 320px;
-  margin: 20px;
-  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+  border: 1px solid #eee;
   position: relative;
-  border-radius: 2px;
+  padding: 15px;
+  margin-top: 15px;
 }
 
 .data-bar-title {
   font-size: 15px;
   display: flex;
   justify-content: flex-start;
-  margin-left: 15px;
-  color: #FFFF;
+  color: #233044;
 }
 
 .data-bar-data {
   font-size: 40px;
-  display: flex;
-  justify-content: flex-start;
-  margin-top: 10px;
-  margin-left: 15px;
-  color: #FFFF;
-}
-
-.data-bar-img-color-dc {
-    background: linear-gradient(0.25turn, #bc4e9c, #f80759);
-}
-
-.data-bar-img-color-rea {
-  background: linear-gradient(0.25turn, #ffe259, #ffa751);
-}
-
-.data-bar-img-color-rad {
-  background: linear-gradient(0.25turn, #78ffd6, #3cd3ad, #4cb8c4);
-}
-
-.data-bar-img-color-hosp {
-  background: linear-gradient(0.25turn, #a6ffcb, #12d8fa, #1fa2ff);
+  color: #233044;
 }
 
 i {
   position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
   color: white;
-  right: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 15px;
 }
+
+.data-bar-img-color-dc {
+  color: #f80759;
+}
+
+.data-bar-img-color-rea {
+  color: #ffa751;
+}
+
+.data-bar-img-color-rad {
+  color: #3cd3ad;
+}
+
+.data-bar-img-color-hosp {
+  color: #1fa2ff;
+}
+
+.data-bar-border-color-dc {
+  border-left: 2px solid #f80759;
+}
+
+.data-bar-border-color-rea {
+  border-left: 2px solid #ffa751;
+}
+
+.data-bar-border-color-rad {
+  border-left: 2px solid #3cd3ad;
+}
+
+.data-bar-border-color-hosp {
+  border-left: 2px solid #1fa2ff;
+}
+
 </style>

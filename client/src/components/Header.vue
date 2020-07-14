@@ -1,5 +1,7 @@
 <template>
   <div class="header">
+    <p> Dashboard </p>
+    <div class="divider"></div>
   </div>
 </template>
 
@@ -12,9 +14,13 @@ export default {
 
 <style scoped>
 .header {
-  width: 100%;
-  height: 35px;
-  background: linear-gradient(0.25turn, #a6ffcb, #ffa751, #f80759);
+  color: #233044;
+  font-weight: 700;
+}
+
+p {
+  margin-left: 15px;
+  margin-right: 15px;
 }
 
 </style>
