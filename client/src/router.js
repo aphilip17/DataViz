@@ -4,6 +4,7 @@ import VueRouter from 'vue-router';
 
 /* Views */
 import Dashboard from './components/Dashboard';
+import LineChartWrapper from './components/LineChartWrapper';
 
 Vue.use(VueRouter);
 
@@ -17,6 +18,11 @@ export default new VueRouter({
     component: Dashboard
   }, {
     path: '/dashboard',
-    component: Dashboard
+    component: Dashboard,
+    name: 'dashboard'
+  }, {
+    path: '/dashboard/:department',
+    component: LineChartWrapper,
+    name: 'department'
   }]
 });

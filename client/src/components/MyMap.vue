@@ -32,7 +32,8 @@
 					@mouseover="(evt) => {
 							onMouseOverCircle(evt);
 					}"
-          @mouseout="onMouseOutCircle()">
+          @mouseout="onMouseOutCircle()"
+          @click="onClickCircle(circle)">
 					<l-tooltip
 						:content="getContentTooltip(circle, layer)">
 					</l-tooltip>
@@ -132,15 +133,6 @@ export default {
 				this.selectedFeature = {};
 			}.bind(this));
 		});
-
-		// this.$root.$on('active-data', function (id, state) {
-		// 	let layer = this.layers.find((layer) => {
-		// 			if (layer.id === id) {
-		// 					return layer;
-		// 			}
-		// 	});
-		// 	layer.state = state;
-		// }.bind(this));
 	},
 
 	methods: {
@@ -186,6 +178,11 @@ export default {
 
     onMouseOutCircle() {
       this.selectedFeature.setStyle(this.style);
+    },
+
+    onClickCircle(circle) {
+      this.$root.$router.push({ path: `/dashboard/${circle.properties.nom}` });
+      this.$root.$emit('select-department', circle.properties);
     },
 
 		addLayerToControlLayers() {
