@@ -38,7 +38,6 @@ app.get('/depts', (eq, res) => {
 /* Each day at noon the data covid will be refreshed. */
 schedule.scheduleJob('00, 00, 12 * * 0-6', async () => {
   const csvRow = await fetchCsv();
-
   Covid.create(csvRow);
 });
 
@@ -83,12 +82,20 @@ const fetchCsv = async () => {
   try {
     const response = await fetch(url);
     const csvStr = await response.text();
-    const csvRow = await csv({
+    /* As it seems impossible to combine the column parser with the output parser
+    (csv to csv row) just format the data with the plugin. And simply convert the array of object
+    in a array of array to be able to insert the data in the DB. */
+    const csvJson = await csv({
         delimiter: [";"],
-        output: 'csv',
+        colParser: {
+          "jour": function(item) {
+            return item.split('/').reverse().join('-');
+          }
+        },
+
     }).fromString(csvStr)
 
-    return csvRow;
+    return csvJson.map((elem) => { return Object.values(elem); });
 
   } catch(error) {
     console.log(error);
