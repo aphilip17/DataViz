@@ -11,7 +11,6 @@ export default {
   },
 
   getHospDataDept(deptId) {
-    console.log(deptId)
     return Api().get('/covidDept', { params: { id: deptId }});
   },
 }

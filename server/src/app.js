@@ -22,6 +22,7 @@ app.use(cors());
 app.get('/covid', (eq, res) => {
   Covid.getLastDay((data) => {
 		const dataFormatted = formatData(data);
+
     res.send(JSON.stringify(dataFormatted));
   });
 });
@@ -33,6 +34,7 @@ app.get('/covidDept/', (req, res) => {
 		const dataFormatted = formatDeptData(data);
 
     res.send(dataFormatted);
+		console.log(dataFormatted);
   });
 });
 
@@ -51,19 +53,23 @@ schedule.scheduleJob('00, 00, 12 * * 0-6', async () => {
 });
 
 const formatDeptData = (resp) => {
-  resp.reduce((accu, elem) => {
-    if (accu.date) {
-      accu.date.push(elem.date);
-      accu.hosp.push(elem.hosp);
-      accu.rea.push(elem.rea);
-      accu.rad.push(elem.rad);
-      accu.dc.push(elem.dc);
-    } else {
-      accu['date'] = [elem.date];
-      accu['hosp'] = [elem.hosp];
-      accu['rea'] = [elem.rea];
-      accu['rad'] = [elem.rad];
-      accu['dc'] = [elem.dc];
+  return resp.reduce((accu, elem) => {
+    if (elem.sex === 0) {
+      if (accu.date) {
+        console.log(elem.date)
+        accu.date.push(elem.date);
+        accu.hosp.push(elem.hosp);
+        accu.rea.push(elem.rea);
+        accu.rad.push(elem.rad);
+        accu.dc.push(elem.dc);
+      } else {
+        accu['date'] = [elem.date];
+        accu['hosp'] = [elem.hosp];
+        accu['rea'] = [elem.rea];
+        accu['rad'] = [elem.rad];
+        accu['dc'] = [elem.dc];
+      }
+
     }
     return accu;
   }, {});

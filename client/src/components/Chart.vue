@@ -35,19 +35,19 @@
 
 		methods: {
 			clearChart() {
-				const ctx = this.$data._chart.ctx;
-				const width = this.$data._chart.width;
-				const height = this.$data._chart.height
+				// const ctx = this.$data._chart.ctx;
+				// const width = this.$data._chart.width;
+				// const height = this.$data._chart.height
 
-				this.$data._chart.clear();
+				// this.$data._chart.clear();
 
-				ctx.save();
-				ctx.textAlign = 'center';
-				ctx.textBaseline = 'middle';
-				ctx.font = "30px Arial";
-				ctx.fillStyle = "#1245A8";
-				ctx.fillText('Select a department on the map to display data', width / 2, height / 2);
-				ctx.restore();
+				// ctx.save();
+				// ctx.textAlign = 'center';
+				// ctx.textBaseline = 'middle';
+				// ctx.font = "30px Arial";
+				// ctx.fillStyle = "#1245A8";
+				// ctx.fillText('Select a department on the map to display data', width / 2, height / 2);
+				// ctx.restore();
 			}
 		}
 	}

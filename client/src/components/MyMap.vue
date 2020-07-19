@@ -50,6 +50,7 @@ import { LMap, LTileLayer, LFeatureGroup, LCircle, LTooltip, LControlLayers } fr
 
 /* Utils */
 import { useFetchGeojson, useFetchDataCovid, useGetPolygonCentroid } from '../composition/fetcher';
+import store from '../Store.js';
 
 export default {
 	setup () {
@@ -76,7 +77,8 @@ export default {
 				circles,
 				getCentroid,
 		}
-	},
+  },
+
 	name: 'my-map',
 
 	components: {
@@ -86,7 +88,9 @@ export default {
 		LCircle,
 		LTooltip,
 		LControlLayers,
-	},
+  },
+
+  store: store,
 
 	data() {
 		return {
@@ -150,6 +154,7 @@ export default {
 			const data = this.dataCodiv[dep][0][layer.id];
 
 			return Math.sqrt(data) * multiplicator;
+
 		},
 
 		getContentTooltip(circle, layer) {
@@ -181,8 +186,9 @@ export default {
     },
 
     onClickCircle(circle) {
-      this.$root.$router.push({ path: `/dashboard/${circle.properties.nom}` });
-      this.$root.$emit('select-department', circle.properties);
+      this.$root.$router.push({ path: `/dashboard/${circle.properties.nom}`});
+      this.$root.$emit('select-department', circle.properties); /* Should use the store in the header too */
+      this.$store.commit('SET_DEPT', circle.properties.code);
     },
 
 		addLayerToControlLayers() {

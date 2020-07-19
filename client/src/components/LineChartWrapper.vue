@@ -12,6 +12,7 @@ import LineChart from '@/components/Chart.vue';
 
 /* Utils */
 import { useFetchDataDeptCovid } from '../composition/fetcher';
+import store from '../Store.js';
 
 export default {
   setup () {
@@ -26,6 +27,11 @@ export default {
 		}
   },
 
+  props: {
+    toto: String,
+    titi: String
+  },
+
   data () {
     return {
 			/* initializing the chart-data with null will throw an vue error */
@@ -34,16 +40,21 @@ export default {
     }
   },
 
+  store: store,
+
   components: {
     LineChart,
   },
 
-  mounted () {
-     this.$root.$on('select-department', this.onSelectedDept);
-    /* TODO: To refactor. Won't work this way anymore. */
-    this.$root.$on('select-dept', (props, data) => {
+  created () {
+    this.onSelectDept();
+  },
 
-      const labels = data.dates.filter((elem, idx) => {
+  methods: {
+    async onSelectDept () {
+      await this.fetchDataCovidDept(this.$store.getters.getSelectedDept);
+
+      const labels = this.covidDept.date.filter((elem, idx) => {
           return idx % 7 === 0;
       });
 
@@ -56,7 +67,7 @@ export default {
 					borderColor: '#f87989',
 					borderWidth: 1,
 					fill: false,
-					data: data.dc.filter((el, idx) => {
+					data: this.covidDept.dc.filter((el, idx) => {
 							return idx % 7 === 0;
 					}),
 				}, {
@@ -65,7 +76,7 @@ export default {
 					borderColor: '#ffff00',
 					borderWidth: 1,
 					fill: false,
-					data: data.hosp.filter((el, idx) => {
+					data: this.covidDept.hosp.filter((el, idx) => {
 							return idx % 7 === 0;
 					}),
 				}, {
@@ -74,7 +85,7 @@ export default {
 					borderColor: '#1de9b6',
 					borderWidth: 1,
 					fill: false,
-					data: data.rea.filter((el, idx) => {
+					data: this.covidDept.rea.filter((el, idx) => {
 							return idx % 7 === 0;
 					}),
 				}, {
@@ -83,23 +94,11 @@ export default {
 					borderColor: '#00e5ff',
 					borderWidth: 1,
 					fill: false,
-					data: data.rad.filter((el, idx) => {
+					data: this.covidDept.rad.filter((el, idx) => {
 							return idx % 7 === 0;
 					}),
 				}]
       }
-    });
-    /* TODO: To refactor. Won't work this way anymore. */
-    this.$root.$on('clear-selection', function() {
-        this.clearSelection = ++this.clearSelection;
-    }.bind(this));
-  },
-
-  methods: {
-    async onSelectedDept (props) {
-      console.log(props)
-      await this.fetchDataCovidDept(props.code);
-      console.log(this.covidDept);
     }
   }
 }

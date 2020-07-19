@@ -3,8 +3,8 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 /* Views */
-import LineChartWrapper from './components/LineChartWrapper';
 import Dashboard from './components/Dashboard';
+import LineChartWrapper from './components/LineChartWrapper';
 
 Vue.use(VueRouter);
 
@@ -23,6 +23,6 @@ export default new VueRouter({
   }, {
     path: '/dashboard/:department',
     component: LineChartWrapper,
-    name: 'department'
+    name: 'department',
   }]
 });
