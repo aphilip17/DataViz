@@ -22,6 +22,7 @@ app.use(cors());
 app.get('/covid', (eq, res) => {
   Covid.getLastDay((data) => {
 		const dataFormatted = formatData(data);
+
     res.send(JSON.stringify(dataFormatted));
   });
 });
@@ -33,6 +34,8 @@ app.get('/covidDept/', (req, res) => {
 		const dataFormatted = formatDeptData(data);
 
     res.send(dataFormatted);
+		console.log(dataFormatted);
+    res.send(JSON.stringify(dataFormatted));
   });
 });
 

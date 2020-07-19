@@ -150,6 +150,7 @@ export default {
 			const data = this.dataCodiv[dep][0][layer.id];
 
 			return Math.sqrt(data) * multiplicator;
+
 		},
 
 		getContentTooltip(circle, layer) {
