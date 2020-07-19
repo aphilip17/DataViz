@@ -44,6 +44,18 @@ class Covid {
       }
     });
   }
+
+  static getDataCovidDept (id, callback) {
+    console.log('tototo', id)
+    const sql = 'SELECT * FROM Covid WHERE dept=?';
+
+    connection.query(sql, id, (err, results) => {
+      if (err) throw err;
+      if (callback) {
+        callback(results);
+      }
+    });
+  }
 }
 
 module.exports = Covid;

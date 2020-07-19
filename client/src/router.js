@@ -3,8 +3,8 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 /* Views */
-import Dashboard from './components/Dashboard';
 import LineChartWrapper from './components/LineChartWrapper';
+import Dashboard from './components/Dashboard';
 
 Vue.use(VueRouter);
 

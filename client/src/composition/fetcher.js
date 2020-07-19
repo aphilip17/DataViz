@@ -45,6 +45,26 @@ export function useFetchDataCovid() {
 	}
 }
 
+export function useFetchDataDeptCovid() {
+
+	const data = ref([]);
+
+	const fetchData = async function(deptId) {
+		try {
+			const res = await CovidServices.getHospDataDept(deptId);
+			data.value = res.data;
+
+		} catch (error) {
+			console.log(error);
+		}
+  }
+
+	return {
+		data,
+		fetchData
+	}
+}
+
 /* Should be in a helper file. */
 export function useGetPolygonCentroid(polygons) {
 

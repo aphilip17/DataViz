@@ -10,7 +10,22 @@
 /* Views */
 import LineChart from '@/components/Chart.vue';
 
+/* Utils */
+import { useFetchDataDeptCovid } from '../composition/fetcher';
+
 export default {
+  setup () {
+		const {
+				data: covidDept,
+				fetchData: fetchDataCovidDept,
+    } = useFetchDataDeptCovid();
+
+    return {
+				covidDept,
+				fetchDataCovidDept,
+		}
+  },
+
   data () {
     return {
 			/* initializing the chart-data with null will throw an vue error */
@@ -24,6 +39,7 @@ export default {
   },
 
   mounted () {
+     this.$root.$on('select-department', this.onSelectedDept);
     /* TODO: To refactor. Won't work this way anymore. */
     this.$root.$on('select-dept', (props, data) => {
 
@@ -78,6 +94,14 @@ export default {
         this.clearSelection = ++this.clearSelection;
     }.bind(this));
   },
+
+  methods: {
+    async onSelectedDept (props) {
+      console.log(props)
+      await this.fetchDataCovidDept(props.code);
+      console.log(this.covidDept);
+    }
+  }
 }
 </script>
 

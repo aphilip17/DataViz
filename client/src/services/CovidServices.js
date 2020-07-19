@@ -8,5 +8,10 @@ export default {
 
   getDepts() {
     return Api().get('/depts');
-  }
+  },
+
+  getHospDataDept(deptId) {
+    console.log(deptId)
+    return Api().get('/covidDept', { params: { id: deptId }});
+  },
 }

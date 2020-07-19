@@ -22,8 +22,17 @@ app.use(cors());
 app.get('/covid', (eq, res) => {
   Covid.getLastDay((data) => {
 		const dataFormatted = formatData(data);
-		console.log(dataFormatted);
     res.send(JSON.stringify(dataFormatted));
+  });
+});
+
+app.get('/covidDept/', (req, res) => {
+
+  console.log('herrrre', req.query)
+  Covid.getDataCovidDept(req.query.id, (data) => {
+		const dataFormatted = formatDeptData(data);
+
+    res.send(dataFormatted);
   });
 });
 
@@ -40,6 +49,25 @@ schedule.scheduleJob('00, 00, 12 * * 0-6', async () => {
   const csvRow = await fetchCsv();
   Covid.create(csvRow);
 });
+
+const formatDeptData = (resp) => {
+  resp.reduce((accu, elem) => {
+    if (accu.date) {
+      accu.date.push(elem.date);
+      accu.hosp.push(elem.hosp);
+      accu.rea.push(elem.rea);
+      accu.rad.push(elem.rad);
+      accu.dc.push(elem.dc);
+    } else {
+      accu['date'] = [elem.date];
+      accu['hosp'] = [elem.hosp];
+      accu['rea'] = [elem.rea];
+      accu['rad'] = [elem.rad];
+      accu['dc'] = [elem.dc];
+    }
+    return accu;
+  }, {});
+}
 
 /* Should be in a helper file I guess. */
 const formatData = (resp) => {
