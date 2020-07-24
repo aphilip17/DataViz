@@ -28,13 +28,10 @@ app.get('/covid', (eq, res) => {
 });
 
 app.get('/covidDept/', (req, res) => {
-
-  console.log('herrrre', req.query)
   Covid.getDataCovidDept(req.query.id, (data) => {
 		const dataFormatted = formatDeptData(data);
 
-    res.send(dataFormatted);
-		console.log(dataFormatted);
+    res.send(JSON.stringify(dataFormatted));
   });
 });
 
