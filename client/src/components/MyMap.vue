@@ -141,11 +141,26 @@ export default {
 
 	methods: {
 		async displayCircles() {
-			await this.fetchDeptGeometries();
-			await this.fetchDataCovid();
-      this.getCentroid();
+      if (this.$store.getters.getDeptsGeojson.features) {
+        this.depts = this.$store.getters.getDeptsGeojson;
+      } else {
+        await this.fetchDeptGeometries();
+        this.$store.commit('SET_DEPTS_GEOJSON', this.depts);
+      }
 
-      this.$root.$emit('refresh-data', this.dataCodiv.total);
+      if (this.$store.getters.getDataCovid['01']) {
+        this.dataCodiv = this.$store.getters.getDataCovid;
+      } else {
+        await this.fetchDataCovid();
+        this.$store.commit('SET_DATA_CODIV', this.dataCodiv);
+      }
+
+      if (this.$store.getters.getCircles.length) {
+        this.circles = this.$store.getters.getCircles;
+      } else {
+        this.getCentroid();
+        this.$store.commit('SET_CIRCLES', this.circles);
+      }
 		},
 
 		getRadius(dep, layer) {

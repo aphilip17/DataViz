@@ -1,7 +1,6 @@
 <template>
   <line-chart
 		:chart-data="datacollection"
-		:clear-selection="clearSelection"
 		class="card-panel hoverable line-chart">
   </line-chart>
 </template>
@@ -15,6 +14,10 @@ import { useFetchDataDeptCovid } from '../composition/fetcher';
 import store from '../Store.js';
 
 export default {
+  components: {
+    LineChart,
+  },
+
   setup () {
 		const {
 				data: covidDept,
@@ -31,25 +34,35 @@ export default {
     return {
 			/* initializing the chart-data with null will throw an vue error */
 			datacollection: { labels: [''], datasets: []},
-			clearSelection: 0
     }
   },
 
   store: store,
 
-  components: {
-    LineChart,
-  },
-
   created () {
     this.onSelectDept();
   },
 
+  watch: {
+			covidDept: function () {
+				this.renderLineChart();
+			}
+  },
+
   methods: {
     async onSelectDept () {
-      await this.fetchDataCovidDept(this.$store.getters.getSelectedDeptCode);
+      const code = this.$store.getters.getSelectedDeptCode;
 
-      const labels = this.covidDept.date.filter((elem, idx) => {
+      if (this.$store.getters.getDataCodivDept(code)) {
+        this.covidDept = this.$store.getters.getDataCodivDept(code).data;
+      } else {
+        await this.fetchDataCovidDept(code);
+        this.$store.commit('SET_DATA_CODIV_DEPT', { code: code,  data: this.covidDept });
+      }
+    },
+
+    renderLineChart () {
+       const labels = this.covidDept.date.filter((elem, idx) => {
           return idx % 7 === 0;
       });
 

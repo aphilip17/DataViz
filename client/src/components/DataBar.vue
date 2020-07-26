@@ -2,7 +2,7 @@
   <div
     class="row">
     <div
-        v-for="(opt, index) in options"
+        v-for="(opt, index) in getTotal"
         :key="index"
         class="col s12 m6 l3 data-bar-col">
       <div
@@ -27,45 +27,46 @@
 </template>
 
 <script>
+
+/* Utils */
+import store from '../Store.js';
+
 export default {
   name: 'data-bar',
-  data() {
-    return {
-      options: [{
+
+  store: store,
+
+  computed: {
+    getTotal: function() {
+      const data = this.$store.getters.getDataCovid
+                && this.$store.getters.getDataCovid.total;
+
+      return [{
         disabled: true,
         name: 'Hospitalisation',
         id: 'hosp',
-        data: 0,
+        data: data && data.hosp || 0,
         icon: 'local_hospital',
       }, {
         disabled: true,
         name: 'En réanimation',
         id: 'rea',
-        data: 0,
+        data: data && data.rea || 0,
         icon: 'local_hotel',
       }, {
         disabled: true,
         name: 'Retours à domicile',
         id: 'rad',
-        data: 0,
+        data: data && data.rad || 0,
         icon: 'house',
       }, {
         disabled: false,
         name: 'Décès à l\'hopital',
         id: 'dc',
-        data: 0,
+        data: data && data.dc || 0,
         icon: 'sentiment_very_dissatisfied'
       }]
     }
-  },
-
-  mounted() {
-    this.$root.$on('refresh-data', (data) => {
-      this.options[0].data = data.hosp;
-      this.options[1].data = data.rea;
-      this.options[2].data = data.rad;
-      this.options[3].data = data.dc;
-    });
   },
 
   methods: {
