@@ -46,7 +46,6 @@ class Covid {
   }
 
   static getDataCovidDept (id, callback) {
-    console.log('tototo', id)
     const sql = 'SELECT * FROM Covid WHERE dept=?';
 
     connection.query(sql, id, (err, results) => {

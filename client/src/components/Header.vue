@@ -10,7 +10,7 @@
         </router-link>
         <router-link
           v-show="deptLink"
-          to="/dashboard/department"> > {{ department }}
+          to="/dashboard/department"> > {{ getDept }}
         </router-link>
       </div>
     </div>
@@ -19,6 +19,8 @@
 </template>
 
 <script>
+/* Utils */
+import store from '../Store.js';
 
 export default {
   name: 'header-dash',
@@ -26,14 +28,18 @@ export default {
   data() {
     return {
       deptLink: false,
-      department: '',
     }
   },
 
+  computed: {
+    getDept: function () {
+      return this.$store.getters.getSelectedDeptName;
+    }
+  },
+
+  store: store,
+
   mounted() {
-    this.$root.$on('select-department', (circle) => {
-      this.department = circle.nom;
-    });
 
     this.$router.afterEach((to) => {
       switch (to.name) {

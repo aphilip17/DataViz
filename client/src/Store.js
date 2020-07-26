@@ -5,17 +5,23 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 
 const state = {
-  selectedDept: '',
+  selectedDept: {
+    code: '',
+    name: ''
+  },
 }
 
 const mutations = {
   SET_DEPT: (state, dept) => {
-    state.selectedDept = dept;
+    state.selectedDept.code = dept.code;
+    state.selectedDept.name = dept.nom;
   }
 }
 
 const getters = {
-  getSelectedDept: (state => state.selectedDept)
+  getSelectedDeptCode: (state => state.selectedDept.code),
+
+  getSelectedDeptName: (state => state.selectedDept.name),
 }
 export default new Vuex.Store({
 

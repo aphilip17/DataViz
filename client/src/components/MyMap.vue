@@ -187,8 +187,7 @@ export default {
 
     onClickCircle(circle) {
       this.$root.$router.push({ path: `/dashboard/${circle.properties.nom}`});
-      this.$root.$emit('select-department', circle.properties); /* Should use the store in the header too */
-      this.$store.commit('SET_DEPT', circle.properties.code);
+      this.$store.commit('SET_DEPT', circle.properties);
     },
 
 		addLayerToControlLayers() {

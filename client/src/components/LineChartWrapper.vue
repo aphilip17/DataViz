@@ -27,11 +27,6 @@ export default {
 		}
   },
 
-  props: {
-    toto: String,
-    titi: String
-  },
-
   data () {
     return {
 			/* initializing the chart-data with null will throw an vue error */
@@ -52,7 +47,7 @@ export default {
 
   methods: {
     async onSelectDept () {
-      await this.fetchDataCovidDept(this.$store.getters.getSelectedDept);
+      await this.fetchDataCovidDept(this.$store.getters.getSelectedDeptCode);
 
       const labels = this.covidDept.date.filter((elem, idx) => {
           return idx % 7 === 0;

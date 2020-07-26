@@ -49,11 +49,11 @@ schedule.scheduleJob('00, 00, 12 * * 0-6', async () => {
   Covid.create(csvRow);
 });
 
+/* Should be in a helper file I guess. */
 const formatDeptData = (resp) => {
   return resp.reduce((accu, elem) => {
     if (elem.sex === 0) {
       if (accu.date) {
-        console.log(elem.date)
         accu.date.push(elem.date);
         accu.hosp.push(elem.hosp);
         accu.rea.push(elem.rea);
@@ -66,7 +66,6 @@ const formatDeptData = (resp) => {
         accu['rad'] = [elem.rad];
         accu['dc'] = [elem.dc];
       }
-
     }
     return accu;
   }, {});
